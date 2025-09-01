@@ -1,90 +1,72 @@
-📝 Desafio Livecoding – Desenvolvedor Pleno .NET
-🎯 Objetivo
+# 📝 Desafio Livecoding – Desenvolvedor Pleno .NET
 
-Avaliar sua capacidade de evoluir uma aplicação existente em .NET 8, aplicando boas práticas de arquitetura, SOLID, mensageria e testes unitários.
+## 🎯 Objetivo
+Avaliar sua capacidade de **evoluir uma aplicação existente em .NET 8**, aplicando **boas práticas de arquitetura, SOLID, mensageria e testes unitários**.
 
-Você terá um código-base pronto (API simples + regra inicial + teste unitário), e seu desafio será implementar novas funcionalidades e evoluir a solução.
+Você terá um código-base pronto (API simples + regra inicial + teste unitário), e seu desafio será **implementar novas funcionalidades e evoluir a solução**.
 
-🔹 O que já está pronto
+---
 
-API .NET 8 com endpoint de agendamentos.
+## 🔹 O que já está pronto
+- API .NET 8 com endpoint de agendamentos.
+- Regra inicial: não permitir agendamento em datas passadas.
+- Repositório em memória.
+- 1 teste unitário de exemplo.
+- Dockerfile básico configurado.
 
-Regra inicial: não permitir agendamento em datas passadas.
+---
 
-Repositório em memória.
+## 🔹 O que você deve implementar
 
-1 teste unitário de exemplo.
+### 1. Regras de negócio
+- Não permitir **agendamentos duplicados** no mesmo horário/endereço.
+- Validar que o **nome do cliente é obrigatório**.
 
-Dockerfile básico configurado.
+### 2. Endpoints
+- Criar um endpoint para **buscar agendamento por Id** (`GET /agendamentos/{id}`).
 
-🔹 O que você deve implementar
-1. Regras de negócio
+### 3. Mensageria
+- Criar uma interface `IMessageBus` e uma implementação fake (`InMemoryMessageBus`).
+- Ao criar um agendamento válido, publicar o evento `AgendamentoCriado`.
 
-Não permitir agendamentos duplicados no mesmo horário/endereço.
+### 4. Testes unitários
+- Adicionar pelo menos **2 novos testes**:
+  - Agendamento duplicado não deve ser permitido.
+  - Agendamento válido deve retornar sucesso.
 
-Validar que o nome do cliente é obrigatório.
+### 5. (Opcional, se der tempo)
+- Executar a API usando Docker (`docker build` / `docker run`).
+- Explicar como publicaria essa aplicação no **Azure**.
+- Explicar como trocaria o repositório em memória por **MongoDB**.
 
-2. Endpoints
+---
 
-Criar um endpoint para buscar agendamento por Id (GET /agendamentos/{id}).
+## 🔹 O que vamos avaliar
+- Clareza e qualidade do código.
+- Aplicação de princípios SOLID e boas práticas.
+- Capacidade de estruturar regras de negócio.
+- Escrita de testes unitários.
+- Raciocínio sobre mensageria, Docker e Cloud.
+- Clareza ao explicar suas decisões técnicas.
 
-3. Mensageria
+---
 
-Criar uma interface IMessageBus e uma implementação fake (InMemoryMessageBus).
-
-Ao criar um agendamento válido, publicar o evento AgendamentoCriado.
-
-4. Testes unitários
-
-Adicionar pelo menos 2 novos testes:
-
-Agendamento duplicado não deve ser permitido.
-
-Agendamento válido deve retornar sucesso.
-
-5. (Opcional, se der tempo)
-
-Executar a API usando Docker (docker build / docker run).
-
-Explicar como publicaria essa aplicação no Azure.
-
-Explicar como trocaria o repositório em memória por MongoDB.
-
-🔹 O que vamos avaliar
-
-Clareza e qualidade do código.
-
-Aplicação de princípios SOLID e boas práticas.
-
-Capacidade de estruturar regras de negócio.
-
-Escrita de testes unitários.
-
-Raciocínio sobre mensageria, Docker e Cloud.
-
-Clareza ao explicar suas decisões técnicas.
-
-🚀 Como rodar o projeto
-
-Clonar o repositório.
-
-Rodar a API:
-
+## 🚀 Como rodar o projeto
+1. Clonar o repositório.
+2. Rodar a API:
+```bash
 dotnet run --project src/Agendamento.Api
-
-
-Testar endpoints via Swagger em https://localhost:5001/swagger.
-
-Rodar testes:
-
+```
+3. Testar endpoints via Swagger em https://localhost:5001/swagger.
+4. Rodar testes:
+```bash
 dotnet test
-
-
-(Opcional) Rodar com Docker:
-
+```
+5. (Opcional) Rodar com Docker:
+```bash
 docker build -t agendamento-api .
 docker run -p 8080:8080 agendamento-api
-
+```
 
 👉 O mínimo esperado para aprovação é implementar corretamente o Core (itens 1 a 4).
 Os itens opcionais diferenciam candidatos que vão além do básico.
