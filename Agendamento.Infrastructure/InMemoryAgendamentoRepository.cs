@@ -11,6 +11,14 @@ namespace Agendamento.Infrastructure
         public IEnumerable<Domain.Entidades.Agendamento> GetAll() => _storage;
 
         public IEnumerable<Domain.Entidades.Agendamento> GetByDateAndAddress(DateTime? date, string? address) =>
-            _storage.Where(a => a.Data == date && a.Endereco.Equals(address, StringComparison.OrdinalIgnoreCase));
+            _storage.Where(row => row.Data == date && row.Endereco.Equals(address, StringComparison.OrdinalIgnoreCase));
+
+        public IEnumerable<Domain.Entidades.Agendamento> GetById(Guid? id) 
+        {
+            if (!id.HasValue)
+                return Enumerable.Empty<Domain.Entidades.Agendamento>();
+
+            return _storage.Where(row => row.Id == id.Value);
+        }
     }
 }

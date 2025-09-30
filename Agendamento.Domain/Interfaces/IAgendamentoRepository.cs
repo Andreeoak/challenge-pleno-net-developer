@@ -4,6 +4,7 @@
     {
         void Add(Entidades.Agendamento agendamento);
         IEnumerable<Entidades.Agendamento> GetAll();
+        IEnumerable<Entidades.Agendamento> GetById(Guid? id);
         IEnumerable<Entidades.Agendamento> GetByDateAndAddress(DateTime? date, string? address);
     }
 }

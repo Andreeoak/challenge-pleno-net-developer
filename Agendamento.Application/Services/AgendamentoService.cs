@@ -48,6 +48,11 @@ namespace Agendamento.Application.Services;
         }
 
         public IEnumerable<Domain.Entidades.Agendamento> ObterTodos() => _repository.GetAll();
+
+        public IEnumerable<Domain.Entidades.Agendamento> ObterPeloId(Guid? id)
+        {
+            return _repository.GetById(id);
+        }
     }
 
     public class AgendamentoDto

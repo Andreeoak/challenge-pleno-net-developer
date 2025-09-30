@@ -23,4 +23,15 @@ public class AgendamentosController : ControllerBase
         var result = _service.Criar(dto);
         return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
     }
+
+    [HttpGet("{id}")]
+    public IActionResult GetById(Guid? id) 
+    {
+        var agendamento = _service.ObterPeloId(id);
+        if (!agendamento.Any())
+            return NotFound();
+
+        return Ok(agendamento);
+
+    }
 }
