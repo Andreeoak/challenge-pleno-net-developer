@@ -1,5 +1,6 @@
 using Agendamento.Application.Services;
 using Agendamento.Domain.Interfaces;
+using Agendamento.Domain.Services;
 using Agendamento.Infrastructure;
 using Microsoft.OpenApi.Models;
 
@@ -15,6 +16,7 @@ builder.Services.AddSwaggerGen(c =>
 
 // Registrando camadas
 builder.Services.AddSingleton<IAgendamentoRepository, InMemoryAgendamentoRepository>();
+builder.Services.AddScoped<IAgendamentoValidator, AgendamentoValidator>();
 builder.Services.AddScoped<AgendamentoService>();
 
 var app = builder.Build();
