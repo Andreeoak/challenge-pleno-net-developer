@@ -3,6 +3,7 @@ using Agendamento.Domain.Interfaces;
 using Agendamento.Domain.Services;
 using Agendamento.Infrastructure;
 using Agendamento.Infrastructure.Debug;
+using Agendamento.Infrastructure.Interfaces;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +17,8 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Registrando camadas
-builder.Services.AddSingleton<IAgendamentoRepository, InMemoryAgendamentoRepository>();
+builder.Services.AddSingleton<IMongoDbConnection, MongoDbConnection>();
+builder.Services.AddSingleton<IAgendamentoRepository, MongoDbRepository>();
 builder.Services.AddSingleton<IMessageBus, InMemoryMessageBus>();
 builder.Services.AddScoped<IAgendamentoValidator, AgendamentoValidator>();
 builder.Services.AddScoped<AgendamentoService>();
