@@ -21,7 +21,7 @@ public class AgendamentosController : ControllerBase
     public IActionResult Post([FromBody] AgendamentoDto dto)
     {
         var result = _service.Criar(dto);
-        return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+        return result.IsSuccess ? Ok(result.Value.Id) : BadRequest(result.Error);
     }
 
     [HttpGet("{id}")]

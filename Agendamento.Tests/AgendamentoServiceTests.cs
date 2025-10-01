@@ -10,11 +10,13 @@ namespace Agendamento.Tests
         private AgendamentoService _service;
         private readonly IAgendamentoRepository _repo;
         private readonly IAgendamentoValidator _validator;
+        private readonly IMessageBus _bus;
         public AgendamentoServiceTests() 
         {
             _repo = new InMemoryAgendamentoRepository();
             _validator = new AgendamentoValidator(_repo);
-            _service = new AgendamentoService(_repo, _validator);
+            _bus = new InMemoryMessageBus();
+            _service = new AgendamentoService(_repo, _validator, _bus);          
         }
 
 
@@ -90,6 +92,22 @@ namespace Agendamento.Tests
             Assert.False(result.IsSuccess);
             Assert.Equal("O nome do cliente não pode ser vazio.", result.Error);
 
+        }
+
+        [Fact]
+        public void DevePermitirAgendamentoValido()
+        {
+            var dto = new AgendamentoDto
+            {
+                Cliente = "Maria",
+                Data = DateTime.Now.AddDays(+1),
+                Endereco = "Rua B"
+            };
+
+            var result = _service.Criar(dto);
+            var agendamentoCriado = result.Value;
+
+            Assert.True(result.IsSuccess);
         }
 
         public void DeveEncontrarNovoAgendamentoPeloId()

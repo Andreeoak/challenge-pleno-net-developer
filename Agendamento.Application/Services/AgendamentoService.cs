@@ -1,6 +1,6 @@
 ﻿using Agendamento.Domain.Interfaces;
 using Agendamento.Domain.Services;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Agendamento.Domain.Events;
 
 namespace Agendamento.Application.Services;
 
@@ -8,23 +8,21 @@ namespace Agendamento.Application.Services;
     {
         private readonly IAgendamentoRepository _repository;
 
-        private IAgendamentoValidator _validator;
+        private readonly IAgendamentoValidator _validator;
 
-        public AgendamentoService(IAgendamentoRepository repository, IAgendamentoValidator validator)
+        private readonly IMessageBus _bus;
+
+        public AgendamentoService(IAgendamentoRepository repository, IAgendamentoValidator validator, IMessageBus bus)
         {
             _repository = repository;
             _validator = _validator ?? new AgendamentoValidator(_repository);
+            _bus = bus;
         }
 
         public (bool IsSuccess, Domain.Entidades.Agendamento? Value, string? Error) Criar(AgendamentoDto dto)
         {
             try
             {
-
-                Console.WriteLine("Valor de data: " + dto.Data);
-                Console.WriteLine($"Cliente recebido: {dto.Cliente}");
-                Console.WriteLine("Evento: {0} - {1}", dto.Data, dto.Endereco);
-
                 _validator.ValidaData(dto.Data);
                 _validator.ValidaCliente(dto.Cliente);
                 _validator.ValidaEvento(dto.Data, dto.Endereco);
@@ -37,6 +35,7 @@ namespace Agendamento.Application.Services;
                 };
 
                 _repository.Add(agendamento);
+                _bus.Publish(new AgendamentoCriado(agendamento.Id, agendamento.Cliente, agendamento.Data, agendamento.Endereco));
                 return (true, agendamento, null);
 
             }
@@ -61,4 +60,5 @@ namespace Agendamento.Application.Services;
         public DateTime Data { get; set; }
         public string Endereco { get; set; } = string.Empty;
     }
+
 
