@@ -37,12 +37,9 @@ public class MongoDbRepository : IAgendamentoRepository
     {
         var filterBuilder = Builders<Domain.Entidades.Agendamento>.Filter;
         var filter = filterBuilder.Empty;
-
-        if (date.HasValue)
-            filter &= filterBuilder.Eq(a => a.Data, date.Value);
-
-        if (!string.IsNullOrWhiteSpace(address))
-            filter &= filterBuilder.Eq(a => a.Endereco, address);
+        
+        filter &= filterBuilder.Eq(a => a.Data, date);
+        filter &= filterBuilder.Eq(a => a.Endereco, address);
 
         return GetCollection().Find(filter).ToList()!;
     }
