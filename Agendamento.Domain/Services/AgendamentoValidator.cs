@@ -1,5 +1,6 @@
-﻿using Agendamento.Domain.Interfaces;
+﻿using Agendamento.Domain.Entidades;
 using Agendamento.Domain.Exceptions;
+using Agendamento.Domain.Interfaces;
 
 namespace Agendamento.Domain.Services;
 
@@ -12,20 +13,29 @@ namespace Agendamento.Domain.Services;
             _repository = repository;
         }
         
-        public bool ValidaData(DateTime? data)
+        public void ValidaAgendamento(Entidades.Agendamento agendamento)
+        {
+            this.ValidaData(agendamento.Data);
+            this.ValidaCliente(agendamento.Cliente);
+            this.ValidaEvento(agendamento.Data, agendamento.Endereco);
+
+        }
+
+
+        private bool ValidaData(DateTime? data)
         {
             ChecaDataVazia(data);
             ChecaDataNoPassado(data);
             return true;
         }
 
-        public bool ValidaCliente(string? cliente)
+        private bool ValidaCliente(string? cliente)
         {
             ChecaClienteVazio(cliente);
             return true;
         }
 
-        public bool ValidaEvento(DateTime? data, string? endereco)
+        private bool ValidaEvento(DateTime? data, string? endereco)
         {
             var eventosExistentes = _repository.GetByDateAndAddress(data, endereco);
             ChecaSeEventoExiste(eventosExistentes);
@@ -34,7 +44,7 @@ namespace Agendamento.Domain.Services;
 
         //Achei melhor separar instruções de alto nível das instruções de baixo nível
 
-        static void ChecaDataVazia(DateTime? data)
+        private static void ChecaDataVazia(DateTime? data)
         {
             if (!data.HasValue)
             {
@@ -42,7 +52,7 @@ namespace Agendamento.Domain.Services;
             }
         }
 
-        static void ChecaDataNoPassado(DateTime? data)
+        private static void ChecaDataNoPassado(DateTime? data)
         {
             if (data <= DateTime.Now)
             {
@@ -50,7 +60,7 @@ namespace Agendamento.Domain.Services;
             }
         }
 
-        static void ChecaClienteVazio(string? cliente)
+        private static void ChecaClienteVazio(string? cliente)
         {
             if (string.IsNullOrWhiteSpace(cliente))
             {
@@ -58,7 +68,7 @@ namespace Agendamento.Domain.Services;
             }
         }
 
-        static void ChecaSeEventoExiste(IEnumerable<Domain.Entidades.Agendamento> eventosExistentes)
+        private static void ChecaSeEventoExiste(IEnumerable<Domain.Entidades.Agendamento> eventosExistentes)
         {
             if (eventosExistentes.Any())
             {

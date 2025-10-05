@@ -15,18 +15,14 @@ namespace Agendamento.Application.Services;
         public AgendamentoService(IAgendamentoRepository repository, IAgendamentoValidator validator, IMessageBus bus)
         {
             _repository = repository;
-            _validator = _validator ?? new AgendamentoValidator(_repository);
+            _validator = validator;
             _bus = bus;
         }
 
         public (bool IsSuccess, Domain.Entidades.Agendamento? Value, string? Error) Criar(AgendamentoDto dto)
         {
             try
-            {
-                _validator.ValidaData(dto.Data);
-                _validator.ValidaCliente(dto.Cliente);
-                _validator.ValidaEvento(dto.Data, dto.Endereco);
-
+            { 
                 var agendamento = new Domain.Entidades.Agendamento
                 {
                     Cliente = dto.Cliente,
@@ -34,8 +30,11 @@ namespace Agendamento.Application.Services;
                     Endereco = dto.Endereco
                 };
 
+                _validator.ValidaAgendamento(agendamento);
+
                 _repository.Add(agendamento);
                 _bus.Publish(new AgendamentoCriado(agendamento.Id, agendamento.Cliente, agendamento.Data, agendamento.Endereco));
+               
                 return (true, agendamento, null);
 
             }
